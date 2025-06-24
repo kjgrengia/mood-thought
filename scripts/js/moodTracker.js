@@ -46,7 +46,23 @@ const moodLists = {
   ],
 };
 
+let activeFilter = "all";
+let searchValue = "";
 let thoughtsList = JSON.parse(localStorage.getItem("thoughts")) || [];
+
+const filterThoughts = () => {
+  [...notesList.children].forEach((noteItem) => {
+    const matchedFilter =
+      activeFilter === "all" || noteItem.dataset.category === activeFilter;
+    const matchedSearchValue = noteItem
+      .querySelector("span")
+      .textContent.toLowerCase()
+      .includes(searchValue);
+
+    noteItem.style.display =
+      matchedFilter && matchedSearchValue ? "flex" : "none";
+  });
+};
 
 const displaySavedThoughts = () => {
   thoughtsList.forEach((thoughts) => {
@@ -106,17 +122,9 @@ const addCategoryFilter = () => {
   notesSection.insertBefore(filter, notesSection.firstChild);
 
   filter.addEventListener("change", () => {
-    const selectedFilter = filter.value;
+    activeFilter = filter.value;
 
-    [...notesList.children].forEach((listElement) => {
-      if (selectedFilter === "all") {
-        listElement.style.display = "";
-        return;
-      }
-
-      listElement.style.display =
-        listElement.dataset.category === selectedFilter ? "flex" : "none";
-    });
+    filterThoughts();
   });
 };
 
@@ -136,18 +144,9 @@ const renderSearchInput = () => {
   notesSection.insertBefore(inputWrapper, notesSection.childNodes[1]);
 
   inputSearch.addEventListener("input", () => {
-    const searchValue = inputSearch.value.toLowerCase();
+    searchValue = inputSearch.value.toLowerCase();
 
-    [...notesList.children].forEach((noteItem) => {
-      const note = noteItem.querySelector("span").textContent;
-
-      if (!note.toLowerCase().includes(searchValue)) {
-        noteItem.style.display = "none";
-        return;
-      }
-
-      noteItem.style.display = "flex";
-    });
+    filterThoughts();
   });
 };
 
