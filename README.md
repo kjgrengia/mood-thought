@@ -30,5 +30,5 @@ A simple web-based Mood Tracker app that allows users to:
 Clone the repository:
 
 ```bash
-git clone https://github.com/kjgrengia/mood-tracker.git
+git clone https://github.com/kjgrengia/mood-thought.git
 ```
